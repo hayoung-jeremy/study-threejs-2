@@ -37,19 +37,21 @@ export default function example() {
   const mesh = new THREE.Mesh(geometry, material)
   scene.add(mesh)
 
-  const clock = new THREE.Clock()
+  // 기본 고정 default time
+  let oldTime = Date.now()
 
   // draw
   function draw() {
-    const delta = clock.getDelta()
-    // 컴퓨터 사양에 따라 time에 따라 실행 간격의 차이가 생기며, time 의 양도 달라짐
-    // 즉, 성능이 좋은 컴퓨터에서는 time 양이 많아 frame 당 움직이는 양도 많아져서 부드러운 animation 가능
-    mesh.rotation.y += delta
+    // draw 함수 내에서 실행된 시점 newTime
+    const newTime = Date.now()
+    const deltaTime = newTime - oldTime
+    // 다음번 drawing 의 기본 값을 위해 oldTime 을 이전번 draw 함수의 newTime 으로 바꿔줌
+    oldTime = newTime
+
+    mesh.rotation.y += deltaTime * 0.001
     renderer.render(scene, camera)
 
-    // 둘 다 사용 가능하지만, webXR 에서는 setAnimationLoop 가 필수
-    // window.requestAnimationFrame(draw)
-    renderer.setAnimationLoop(draw)
+    window.requestAnimationFrame(draw)
   }
   draw()
 
