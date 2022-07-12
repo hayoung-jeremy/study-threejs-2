@@ -7,16 +7,33 @@ renderer.setSize(window.innerWidth, window.innerHeight)
 // Scene
 const scene = new THREE.Scene()
 
-// Camera
-const camera = new THREE.PerspectiveCamera(
-  75, // fov
-  window.innerWidth / window.innerHeight, // aspect
+// Camera -- PerspectiveCamera
+// const camera = new THREE.PerspectiveCamera(
+//   75, // fov
+//   window.innerWidth / window.innerHeight, // aspect
+//   0.1, // near
+//   1000 // far
+// )
+
+// camera.position.y = 2
+// camera.position.z = 5
+// scene.add(camera)
+
+// Camera -- OrthographicCamera
+const camera = new THREE.OrthographicCamera(
+  -(window.innerWidth / window.innerHeight), // left
+  window.innerWidth / window.innerHeight, // right
+  1, // top
+  -1, // bottom
   0.1, // near
   1000 // far
 )
-
+camera.position.x = 2
 camera.position.y = 2
-camera.position.z = 5
+camera.position.z = 10
+camera.lookAt(0, 0, 0)
+camera.zoom = 0.5
+camera.updateProjectionMatrix()
 scene.add(camera)
 
 // Mesh
