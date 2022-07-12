@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "gsap": "^3.10.4",
+    "stats.js": "^0.17.0",
     "three": "^0.142.0"
   },
   "devDependencies": {
