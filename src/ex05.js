@@ -37,12 +37,14 @@ export default function example() {
   const mesh = new THREE.Mesh(geometry, material)
   scene.add(mesh)
 
+  const clock = new THREE.Clock()
+
   // draw
   function draw() {
-    // 각도는 Radian 사용
-    // Radian == 2 파이, 즉 360도
-    // mesh.rotation.y += 0.1
-    mesh.rotation.y += THREE.MathUtils.degToRad(1)
+    const time = clock.getElapsedTime()
+    // 컴퓨터 사양에 따라 time에 따라 실행 간격의 차이가 생기며, time 의 양도 달라짐
+    // 즉, 성능이 좋은 컴퓨터에서는 time 양이 많아 frame 당 움직이는 양도 많아져서 부드러운 animation 가능
+    mesh.rotation.y = time
     renderer.render(scene, camera)
 
     // 둘 다 사용 가능하지만, webXR 에서는 setAnimationLoop 가 필수
