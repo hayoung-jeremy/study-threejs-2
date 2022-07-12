@@ -22,13 +22,27 @@ export default function example() {
     0.1,
     1000
   )
-  camera.position.z = 5
+  camera.position.x = 1
+  camera.position.y = 3
+  camera.position.z = 0
+
   scene.add(camera)
 
-  const light = new THREE.DirectionalLight(0xffffff, 1)
-  light.position.x = 1
-  light.position.z = 2
-  scene.add(light)
+  // Light
+  const ambientLight = new THREE.AmbientLight("#fff", 0.2)
+  const directionalLight = new THREE.DirectionalLight("#fff", 1)
+  directionalLight.position.x = 1
+  directionalLight.position.z = 2
+  scene.add(directionalLight)
+  scene.add(ambientLight)
+
+  // AxesHelper
+  const axesHelper = new THREE.AxesHelper(2) // size 조절 가능
+  scene.add(axesHelper)
+
+  // GridHelper
+  const gridHelper = new THREE.GridHelper(5)
+  scene.add(gridHelper)
 
   // Mesh
   const geometry = new THREE.BoxGeometry(1, 1, 1)
@@ -37,6 +51,8 @@ export default function example() {
   })
   const mesh = new THREE.Mesh(geometry, material)
   scene.add(mesh)
+
+  camera.lookAt(mesh.position)
 
   // 그리기
   const clock = new THREE.Clock()
