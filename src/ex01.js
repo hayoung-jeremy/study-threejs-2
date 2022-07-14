@@ -1,7 +1,7 @@
 import * as THREE from "three"
-import dat from "dat.gui"
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls"
 
-// ----- 주제: scene graph
+// ----- 주제: Geometry 기본
 
 export default function example() {
   // Renderer
@@ -23,7 +23,6 @@ export default function example() {
     0.1,
     1000
   )
-  camera.position.y = 1.5
   camera.position.z = 4
   scene.add(camera)
 
@@ -36,46 +35,24 @@ export default function example() {
   directionalLight.position.z = 2
   scene.add(directionalLight)
 
+  // Controls
+  const controls = new OrbitControls(camera, renderer.domElement)
+
   // Mesh
-  const geometry = new THREE.BoxBufferGeometry(1, 1, 1)
+  const geometry = new THREE.BoxGeometry(1, 1, 1)
   const material = new THREE.MeshStandardMaterial({
-    color: "pink",
+    color: "hotpink",
+    // wireframe: true,
+    side: THREE.DoubleSide,
   })
-
-  const solarSystem = new THREE.Group()
-  const sun = new THREE.Mesh(geometry, material)
-
-  const earthOrbitSystem = new THREE.Group()
-  const earth = sun.clone()
-
-  earth.scale.set(0.3, 0.3, 0.3)
-  earthOrbitSystem.position.x = 2
-
-  const moonGroup = new THREE.Group()
-  const moon = earth.clone()
-  moon.scale.set(0.15, 0.15, 0.15)
-  moon.position.x = 0.5
-
-  moonGroup.add(moon)
-  earthOrbitSystem.add(earth, moonGroup)
-  solarSystem.add(sun, earthOrbitSystem)
-  scene.add(solarSystem)
-
-  // Dat GUI
-  const gui = new dat.GUI()
-  gui.add(camera.position, "x", -5, 5, 0.1).name("카메라 X")
-  gui.add(camera.position, "y", -5, 5, 0.1).name("카메라 Y")
-  gui.add(camera.position, "z", 2, 10, 0.1).name("카메라 Z")
+  const mesh = new THREE.Mesh(geometry, material)
+  scene.add(mesh)
 
   // 그리기
   const clock = new THREE.Clock()
 
   function draw() {
     const delta = clock.getDelta()
-
-    solarSystem.rotation.y += delta
-    earthOrbitSystem.rotation.y += delta
-    moonGroup.rotation.y += delta
 
     renderer.render(scene, camera)
     renderer.setAnimationLoop(draw)
