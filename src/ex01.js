@@ -1,6 +1,7 @@
 import * as THREE from "three"
+import dat from "dat.gui"
 
-// ----- 주제: AxesHelper, GridHelper
+// ----- 주제: position, scale, rotation
 
 export default function example() {
   // Renderer
@@ -22,27 +23,18 @@ export default function example() {
     0.1,
     1000
   )
-  camera.position.x = 1
-  camera.position.y = 3
-  camera.position.z = 0
-
+  camera.position.y = 1.5
+  camera.position.z = 4
   scene.add(camera)
 
   // Light
-  const ambientLight = new THREE.AmbientLight("#fff", 0.2)
-  const directionalLight = new THREE.DirectionalLight("#fff", 1)
+  const ambientLight = new THREE.AmbientLight("white", 0.5)
+  scene.add(ambientLight)
+
+  const directionalLight = new THREE.DirectionalLight("white", 1)
   directionalLight.position.x = 1
   directionalLight.position.z = 2
   scene.add(directionalLight)
-  scene.add(ambientLight)
-
-  // AxesHelper
-  const axesHelper = new THREE.AxesHelper(2) // size 조절 가능
-  scene.add(axesHelper)
-
-  // GridHelper
-  const gridHelper = new THREE.GridHelper(5)
-  scene.add(gridHelper)
 
   // Mesh
   const geometry = new THREE.BoxGeometry(1, 1, 1)
@@ -52,15 +44,25 @@ export default function example() {
   const mesh = new THREE.Mesh(geometry, material)
   scene.add(mesh)
 
-  camera.lookAt(mesh.position)
+  // AxesHelper
+  const axesHelper = new THREE.AxesHelper(3)
+  scene.add(axesHelper)
+
+  // Dat GUI
+  const gui = new dat.GUI()
+  gui.add(camera.position, "x", -5, 5, 0.1).name("카메라 X")
+  gui.add(camera.position, "y", -5, 5, 0.1).name("카메라 Y")
+  gui.add(camera.position, "z", 2, 10, 0.1).name("카메라 Z")
 
   // 그리기
   const clock = new THREE.Clock()
 
   function draw() {
-    const time = clock.getElapsedTime()
+    const delta = clock.getDelta()
 
-    mesh.rotation.y = time
+    mesh.position.set(0, 0, 0)
+    mesh.scale.set(1, 1, 2)
+    mesh.rotation.reorder("YXZ")
 
     renderer.render(scene, camera)
     renderer.setAnimationLoop(draw)
