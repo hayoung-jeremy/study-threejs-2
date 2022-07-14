@@ -1,7 +1,7 @@
 import * as THREE from "three"
 import dat from "dat.gui"
 
-// ----- 주제: position, scale, rotation
+// ----- 주제: scene graph
 
 export default function example() {
   // Renderer
@@ -37,16 +37,29 @@ export default function example() {
   scene.add(directionalLight)
 
   // Mesh
-  const geometry = new THREE.BoxGeometry(1, 1, 1)
+  const geometry = new THREE.BoxBufferGeometry(1, 1, 1)
   const material = new THREE.MeshStandardMaterial({
-    color: "seagreen",
+    color: "pink",
   })
-  const mesh = new THREE.Mesh(geometry, material)
-  scene.add(mesh)
 
-  // AxesHelper
-  const axesHelper = new THREE.AxesHelper(3)
-  scene.add(axesHelper)
+  const solarSystem = new THREE.Group()
+  const sun = new THREE.Mesh(geometry, material)
+
+  const earthOrbitSystem = new THREE.Group()
+  const earth = sun.clone()
+
+  earth.scale.set(0.3, 0.3, 0.3)
+  earthOrbitSystem.position.x = 2
+
+  const moonGroup = new THREE.Group()
+  const moon = earth.clone()
+  moon.scale.set(0.15, 0.15, 0.15)
+  moon.position.x = 0.5
+
+  moonGroup.add(moon)
+  earthOrbitSystem.add(earth, moonGroup)
+  solarSystem.add(sun, earthOrbitSystem)
+  scene.add(solarSystem)
 
   // Dat GUI
   const gui = new dat.GUI()
@@ -60,9 +73,9 @@ export default function example() {
   function draw() {
     const delta = clock.getDelta()
 
-    mesh.position.set(0, 0, 0)
-    mesh.scale.set(1, 1, 2)
-    mesh.rotation.reorder("YXZ")
+    solarSystem.rotation.y += delta
+    earthOrbitSystem.rotation.y += delta
+    moonGroup.rotation.y += delta
 
     renderer.render(scene, camera)
     renderer.setAnimationLoop(draw)
