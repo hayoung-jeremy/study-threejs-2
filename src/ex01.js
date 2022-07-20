@@ -1,7 +1,8 @@
 import * as THREE from "three"
-import { DragControls } from "three/examples/jsm/controls/DragControls"
+import { PointerLockControls } from "three/examples/jsm/controls/PointerLockControls"
+import { KeyController } from "./KeyController"
 
-// ----- 주제: DragControls
+// ----- 주제: PointerLockControls
 
 export default function example() {
   // Renderer
@@ -36,6 +37,37 @@ export default function example() {
   directionalLight.position.z = 2
   scene.add(directionalLight)
 
+  // Controls
+  const controls = new PointerLockControls(camera, renderer.domElement)
+
+  controls.domElement.addEventListener("click", () => {
+    controls.lock()
+  })
+  controls.addEventListener("lock", () => {
+    console.log("lock!")
+  })
+  controls.addEventListener("unlock", () => {
+    console.log("unlock!")
+  })
+
+  const keyController = new KeyController()
+
+  const walk = () => {
+    // console.log("walk")
+    if (keyController.keys["KeyW"] || keyController.keys["ArrowUp"]) {
+      controls.moveForward(0.02)
+    }
+    if (keyController.keys["KeyS"] || keyController.keys["ArrowDown"]) {
+      controls.moveForward(-0.02)
+    }
+    if (keyController.keys["KeyA"] || keyController.keys["ArrowLeft"]) {
+      controls.moveRight(-0.02)
+    }
+    if (keyController.keys["KeyD"] || keyController.keys["ArrowRight"]) {
+      controls.moveRight(0.02)
+    }
+  }
+
   // Mesh
   const geometry = new THREE.BoxGeometry(1, 1, 1)
   const meshes = []
@@ -58,15 +90,13 @@ export default function example() {
     meshes.push(mesh)
   }
 
-  // Controls
-  const controls = new DragControls(meshes, camera, renderer.domElement)
-  controls.addEventListener("dragstart", e => console.log(e.object.name))
-
   // 그리기
   const clock = new THREE.Clock()
 
   function draw() {
     const delta = clock.getDelta()
+
+    walk()
 
     renderer.render(scene, camera)
     renderer.setAnimationLoop(draw)
