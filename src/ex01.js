@@ -1,7 +1,7 @@
 import * as THREE from "three"
-import { FirstPersonControls } from "three/examples/jsm/controls/FirstPersonControls"
+import { PointerLockControls } from "three/examples/jsm/controls/PointerLockControls"
 
-// ----- 주제: FirstPersonControls
+// ----- 주제: PointerLockControls
 
 export default function example() {
   // Renderer
@@ -37,11 +37,13 @@ export default function example() {
   scene.add(directionalLight)
 
   // Controls
-  const controls = new FirstPersonControls(camera, renderer.domElement)
-  controls.movementSpeed = 3 // 이동 속도 조절 default : 1
-  controls.activeLook = false // 회전 제한
-  controls.lookSpeed = 0.1 // FlyControls 의 rollspeed
-  controls.autoForward = true // 자동 전진
+  const controls = new PointerLockControls(camera, renderer.domElement)
+  console.log(controls.domElement === renderer.domElement) // true
+  controls.domElement.addEventListener("click", () => {
+    controls.lock()
+  })
+  controls.addEventListener("lock", () => console.log("lock!"))
+  controls.addEventListener("unlock", () => console.log("unlock!"))
 
   // Mesh
   const geometry = new THREE.BoxGeometry(1, 1, 1)
@@ -67,8 +69,6 @@ export default function example() {
 
   function draw() {
     const delta = clock.getDelta()
-
-    controls.update(delta)
 
     renderer.render(scene, camera)
     renderer.setAnimationLoop(draw)
