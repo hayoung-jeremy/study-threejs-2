@@ -1,7 +1,7 @@
 import * as THREE from "three"
-import { PointerLockControls } from "three/examples/jsm/controls/PointerLockControls"
+import { DragControls } from "three/examples/jsm/controls/DragControls"
 
-// ----- 주제: PointerLockControls
+// ----- 주제: DragControls
 
 export default function example() {
   // Renderer
@@ -36,17 +36,9 @@ export default function example() {
   directionalLight.position.z = 2
   scene.add(directionalLight)
 
-  // Controls
-  const controls = new PointerLockControls(camera, renderer.domElement)
-  console.log(controls.domElement === renderer.domElement) // true
-  controls.domElement.addEventListener("click", () => {
-    controls.lock()
-  })
-  controls.addEventListener("lock", () => console.log("lock!"))
-  controls.addEventListener("unlock", () => console.log("unlock!"))
-
   // Mesh
   const geometry = new THREE.BoxGeometry(1, 1, 1)
+  const meshes = []
   let mesh
   let material
   for (let i = 0; i < 20; i++) {
@@ -61,8 +53,14 @@ export default function example() {
     mesh.position.x = (Math.random() - 0.5) * 5
     mesh.position.y = (Math.random() - 0.5) * 5
     mesh.position.z = (Math.random() - 0.5) * 5
+    mesh.name = `box-${i}`
     scene.add(mesh)
+    meshes.push(mesh)
   }
+
+  // Controls
+  const controls = new DragControls(meshes, camera, renderer.domElement)
+  controls.addEventListener("dragstart", e => console.log(e.object.name))
 
   // 그리기
   const clock = new THREE.Clock()
