@@ -1,7 +1,7 @@
 import * as THREE from "three"
-import { TrackballControls } from "three/examples/jsm/controls/TrackballControls"
+import { FlyControls } from "three/examples/jsm/controls/FlyControls"
 
-// ----- 주제: TrackballControls
+// ----- 주제: FlyControls
 
 export default function example() {
   // Renderer
@@ -37,7 +37,10 @@ export default function example() {
   scene.add(directionalLight)
 
   // Controls
-  const controls = new TrackballControls(camera, renderer.domElement)
+  const controls = new FlyControls(camera, renderer.domElement)
+  controls.rollSpeed = 0.05 // 회전 속도 조절 default : 0.005
+  controls.movementSpeed = 3 // 이동 속도 조절 default : 1
+  controls.dragToLook = true // mouse 이동에 따라 회전하지 않음, drag 해야 회전
 
   // Mesh
   const geometry = new THREE.BoxGeometry(1, 1, 1)
@@ -64,7 +67,7 @@ export default function example() {
   function draw() {
     const delta = clock.getDelta()
 
-    controls.update()
+    controls.update(delta)
 
     renderer.render(scene, camera)
     renderer.setAnimationLoop(draw)
