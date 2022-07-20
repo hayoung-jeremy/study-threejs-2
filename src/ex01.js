@@ -1,7 +1,7 @@
 import * as THREE from "three"
-import { FlyControls } from "three/examples/jsm/controls/FlyControls"
+import { FirstPersonControls } from "three/examples/jsm/controls/FirstPersonControls"
 
-// ----- 주제: FlyControls
+// ----- 주제: FirstPersonControls
 
 export default function example() {
   // Renderer
@@ -37,10 +37,11 @@ export default function example() {
   scene.add(directionalLight)
 
   // Controls
-  const controls = new FlyControls(camera, renderer.domElement)
-  controls.rollSpeed = 0.05 // 회전 속도 조절 default : 0.005
+  const controls = new FirstPersonControls(camera, renderer.domElement)
   controls.movementSpeed = 3 // 이동 속도 조절 default : 1
-  controls.dragToLook = true // mouse 이동에 따라 회전하지 않음, drag 해야 회전
+  controls.activeLook = false // 회전 제한
+  controls.lookSpeed = 0.1 // FlyControls 의 rollspeed
+  controls.autoForward = true // 자동 전진
 
   // Mesh
   const geometry = new THREE.BoxGeometry(1, 1, 1)
