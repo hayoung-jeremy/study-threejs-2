@@ -1,7 +1,7 @@
 import * as THREE from "three"
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls"
+import { TrackballControls } from "three/examples/jsm/controls/TrackballControls"
 
-// ----- 주제: OrbitControls
+// ----- 주제: TrackballControls
 
 export default function example() {
   // Renderer
@@ -37,17 +37,7 @@ export default function example() {
   scene.add(directionalLight)
 
   // Controls
-  const controls = new OrbitControls(camera, renderer.domElement)
-  controls.enableDamping = true
-  // controls.enableZoom = false
-  controls.maxDistance = 10
-  controls.minDistance = 2
-  // controls.minPolarAngle = Math.PI / 4
-  controls.minPolarAngle = THREE.MathUtils.degToRad(45)
-  controls.maxPolarAngle = THREE.MathUtils.degToRad(135)
-  controls.target.set(2, 2, 2)
-  controls.autoRotate = true
-  controls.autoRotateSpeed = 2
+  const controls = new TrackballControls(camera, renderer.domElement)
 
   // Mesh
   const geometry = new THREE.BoxGeometry(1, 1, 1)
