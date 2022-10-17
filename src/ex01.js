@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
-// ----- 주제: 기본 Geometry 파티클
+// ----- 주제: particle image
 
 export default function example() {
   // Renderer
@@ -43,11 +43,20 @@ export default function example() {
   for (let i = 0; i < positions.length; i++) {
     positions[i] = (Math.random() - 0.5) * 10;
   }
+
+  const textureLoader = new THREE.TextureLoader();
+  const particleTexture = textureLoader.load("/images/star.png");
+
   geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
   const material = new THREE.PointsMaterial({
-    size: 0.03,
+    size: 0.1,
+    map: particleTexture,
     color: "plum",
+    transparent: true,
+    alphaMap: particleTexture,
+    depthWrite: false,
   });
+
   const particles = new THREE.Points(geometry, material);
   scene.add(particles);
 
