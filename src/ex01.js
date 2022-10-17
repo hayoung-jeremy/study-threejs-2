@@ -36,33 +36,30 @@ export default function example() {
   controls.enableDamping = true;
 
   // Mesh
-  const geometry = new THREE.BufferGeometry();
-  const count = 1000;
-  const positions = new Float32Array(count * 3);
-  const colors = new Float32Array(count * 3);
+  const planeMesh = new THREE.Mesh(
+    new THREE.PlaneGeometry(0.3, 0.3),
+    new THREE.MeshBasicMaterial({
+      color: "plum",
+      side: THREE.DoubleSide,
+    })
+  );
 
-  for (let i = 0; i < positions.length; i++) {
-    positions[i] = (Math.random() - 0.5) * 10;
-    colors[i] = Math.random();
+  // Points
+  const sphereGeometry = new THREE.SphereGeometry(1, 8, 8);
+  const positionArray = sphereGeometry.attributes.position.array;
+
+  // 여러개의 Plane Mesh 생성
+  let plane;
+  for (let i = 0; i < positionArray.length; i += 3) {
+    plane = planeMesh.clone();
+    plane.position.x = positionArray[i];
+    plane.position.y = positionArray[i + 1];
+    plane.position.z = positionArray[i + 2];
+
+    plane.lookAt(0, 0, 0);
+
+    scene.add(plane);
   }
-
-  const textureLoader = new THREE.TextureLoader();
-  const particleTexture = textureLoader.load("/images/star.png");
-
-  geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
-  geometry.setAttribute("color", new THREE.BufferAttribute(colors, 3));
-  const material = new THREE.PointsMaterial({
-    size: 0.1,
-    map: particleTexture,
-    color: "plum",
-    transparent: true,
-    alphaMap: particleTexture,
-    depthWrite: false,
-    vertexColors: true,
-  });
-
-  const particles = new THREE.Points(geometry, material);
-  scene.add(particles);
 
   // 그리기
   const clock = new THREE.Clock();
