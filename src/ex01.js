@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
-// ----- 주제: particle image
+// ----- 주제: random color particles
 
 export default function example() {
   // Renderer
@@ -39,15 +39,18 @@ export default function example() {
   const geometry = new THREE.BufferGeometry();
   const count = 1000;
   const positions = new Float32Array(count * 3);
+  const colors = new Float32Array(count * 3);
 
   for (let i = 0; i < positions.length; i++) {
     positions[i] = (Math.random() - 0.5) * 10;
+    colors[i] = Math.random();
   }
 
   const textureLoader = new THREE.TextureLoader();
   const particleTexture = textureLoader.load("/images/star.png");
 
   geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+  geometry.setAttribute("color", new THREE.BufferAttribute(colors, 3));
   const material = new THREE.PointsMaterial({
     size: 0.1,
     map: particleTexture,
@@ -55,6 +58,7 @@ export default function example() {
     transparent: true,
     alphaMap: particleTexture,
     depthWrite: false,
+    vertexColors: true,
   });
 
   const particles = new THREE.Points(geometry, material);
